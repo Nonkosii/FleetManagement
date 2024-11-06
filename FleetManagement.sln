@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetManagement", "FleetManagement.csproj", "{45C21C7F-1E71-4A15-8393-F01EFD8FAD85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45C21C7F-1E71-4A15-8393-F01EFD8FAD85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45C21C7F-1E71-4A15-8393-F01EFD8FAD85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45C21C7F-1E71-4A15-8393-F01EFD8FAD85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45C21C7F-1E71-4A15-8393-F01EFD8FAD85}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FC680773-A9BB-4B79-B8D4-BE1DA3EC9D4A}
+	EndGlobalSection
+EndGlobal
