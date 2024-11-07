@@ -97,7 +97,7 @@ GET /api/vehicles/locations:
 
         [
           {
-            "vehicleId": "vehicle123",
+            "vehicleId": "V123",
             "latitude": 34.0522,
             "longitude": -118.2437,
             "timestamp": "2024-11-07T12:00:00Z"
@@ -124,5 +124,8 @@ Additional:
     center: { lat: 0, lng: 0 },
     zoom: 2
 });
+
+9. Filter vehicle search on Data table search input by Vehicle ID and the specific vehicle location will be focused or only show on the map, this exclude other vehicle ID
+   on the table and map.
 
 8. Preloader: The page shows a preloader (loading spinner) until the content is ready to be displayed.
