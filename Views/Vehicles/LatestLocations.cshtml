@@ -6,19 +6,59 @@
     <title>Latest Vehicle Locations</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
+        .header {
+            background-color: #ff6666;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-top: 20px; 
+            border-radius: 10px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1.text-center {
+            font-weight: bold;
+            color: #343a40;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
         #map {
             height: 500px;
             width: 100%;
         }
+
+        .loading-spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #preloader {
+            background: rgba(255, 255, 255, 0.8) no-repeat center center; /* Change this line */
+            height: 100vh;
+            width: 100%;
+            position: fixed;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.3/css/dataTables.jqueryui.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowgroup/1.3.0/css/rowGroup.jqueryui.min.css" />
 </head>
 <body>
+    <h1 class="header">Latest Vehicle Locations</h1>
     <div class="container">
-        <h2 class="mt-5">Latest Vehicle Locations</h2>
         <table id="dataTable" class="table table-bordered mt-3">
             <thead class="thead-light">
                 <tr>
@@ -44,85 +84,75 @@
         <div id="map"></div>
     </div>
 
-    <!-- Load jQuery first -->
+    
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <!-- DataTables scripts -->
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.3/js/dataTables.jqueryui.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/rowgroup/1.3.0/js/dataTables.rowGroup.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
 
     <script>
-        let map;
-        let markers = []; // Array to store marker references
-
+       
         const dataTable = $('#dataTable').DataTable({
-            "order": [],
+            "order": []
         });
 
-        function initMap() {
-            const defaultCenter = { lat: 37.7749, lng: -122.4194 };
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: defaultCenter,
-                zoom: 4,
-                mapId: "fe0ba81938d4e300"
-            });
+        // Initiation
+        const map = L.map('map').setView([0, 0], 2); // Center at [0, 0] with zoom level 2
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 15,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
-            const locations = @Html.Raw(Json.Serialize(Model));
-            updateMapMarkers(locations);
-        }
+        // Load vehicle data into JavaScript (ASP.NET Model data as JSON)
+        const locations = @Html.Raw(Json.Serialize(Model));
 
-        function updateMapMarkers(locations) {
-            // Clear existing markers
-            markers.forEach(marker => marker.setMap(null));
+        //Store current markers
+        let markers = [];
+
+        
+        function updateMap(filteredLocations) {
+            // Clear exiting markers
+            markers.forEach(marker => map.removeLayer(marker));
             markers = [];
 
-            // Add markers based on filtered data
-            locations.forEach(location => {
-                const position = { lat: location.latitude, lng: location.longitude };
-
-                const markerContent = document.createElement("div");
-                markerContent.innerHTML = `<span style="font-size: 20px; color: red;">📍 ${location.vehicleId}</span>`;
-
-                const marker = new google.maps.marker.AdvancedMarkerElement({
-                    position: position,
-                    map: map,
-                    content: markerContent
-                });
-
-                const infoWindow = new google.maps.InfoWindow({
-                    content: `<strong>Vehicle ID:</strong> ${location.vehicleId}<br>
-                                      <strong>Latitude:</strong> ${location.latitude}<br>
-                                      <strong>Longitude:</strong> ${location.longitude}<br>
-                                      <strong>Timestamp:</strong> ${location.timestamp}`
-                });
-
-                marker.addListener("click", () => {
-                    infoWindow.open(map, marker);
-                });
-
+            // Add markers for each filtered location
+            filteredLocations.forEach(vehicle => {
+                const marker = L.marker([vehicle.latitude, vehicle.longitude]).addTo(map);
+                marker.bindPopup(`<b>Vehicle ID:</b> ${vehicle.vehicleId}<br><b>Location:</b> ${vehicle.latitude}, ${vehicle.longitude}`);
+                marker.bindTooltip(`Vehicle ID: ${vehicle.vehicleId}`, { permanent: true, direction: "right" }).openTooltip();
                 markers.push(marker);
             });
+
+            // Adjust the map view to fit all markers if there are any
+            if (markers.length > 0) {
+                const group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds(), { padding: [50, 50] });
+            } else {
+                map.setView([0, 0], 2); // Reset
+            }
         }
 
-        // Event listener for DataTable redraw (filtering)
-        dataTable.on('draw', function () {
+        // Initiation for markers
+        updateMap(locations);
+
+        // Listen search events
+        dataTable.on('search.dt', function () {
             const filteredData = dataTable.rows({ filter: 'applied' }).data().toArray();
-            const filteredLocations = filteredData.map(row => ({
-                vehicleId: row[0],
-                latitude: parseFloat(row[1]),
-                longitude: parseFloat(row[2]),
-                timestamp: row[3]
-            }));
-            updateMapMarkers(filteredLocations);
+            const filteredLocations = locations.filter(location =>
+                filteredData.some(row => row[0] == location.vehicleId) // Compare Vehicle ID
+            );
+            // Apply new filtered vehicles
+            updateMap(filteredLocations);
+        });
+    </script>
+    <script>
+        $(window).on('load', function () {
+            setTimeout(function () {
+                $('#preloader').fadeOut('slow', function () {
+                    $(this).remove();
+                });
+                $('.loading-spinner').hide();
+            }, 1000);
         });
 
     </script>
-
-    <!-- Google Maps API with AdvancedMarkerElement library -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJElz2O69f4GMdoaVzIE6PP64wCLdopVk&callback=initMap&libraries=marker" async defer></script>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>

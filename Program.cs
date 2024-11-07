@@ -20,9 +20,17 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configure DbContext with SQL Server
-builder.Services.AddDbContext<FleetDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Add services to the container.
+if (builder.Environment.IsEnvironment("Testing")) 
+{
+    builder.Services.AddDbContext<FleetDbContext>(options =>
+        options.UseInMemoryDatabase("TestDatabase"));  // Use in-memory database for testing
+}
+else
+{
+    builder.Services.AddDbContext<FleetDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));  // Use SQL Server for development/production
+}
 
 
 var app = builder.Build();

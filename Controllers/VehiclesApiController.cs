@@ -24,6 +24,16 @@ namespace FleetManagement.Controllers
                 return BadRequest("VehicleId and location data are required.");
             }
 
+            if (location.Latitude < -90 || location.Latitude > 90)
+            {
+                return BadRequest("Invalid latitude value.");
+            }
+
+            if (location.Longitude < -180 || location.Longitude > 180)
+            {
+                return BadRequest("Invalid longitude value.");
+            }
+
             location.Timestamp = DateTime.UtcNow;
             await _context.VehicleLocations.AddAsync(location);
             await _context.SaveChangesAsync();
