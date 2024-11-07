@@ -32,7 +32,7 @@ Prerequisites
 
     Clone the repository:
 
-git clone https://your-repo-url.git
+git clone https://github.com/Nonkosii/FleetManagement.git
 cd FleetManagement
 
 2. Install dependencies(Visual Studio):
