@@ -15,13 +15,13 @@ namespace FleetManagement.Controllers
             _context = context;
         }
 
-        // POST /api/vehicles/location - For saving vehicle location data
+       
         [HttpPost("location")]
         public async Task<IActionResult> PostLocation([FromBody] VehicleLocation location)
         {
             if (location == null || string.IsNullOrEmpty(location.VehicleId))
             {
-                return BadRequest("VehicleId and location data are required.");
+                return BadRequest("Vehicle Id and location data are required.");
             }
 
             if (location.Latitude < -90 || location.Latitude > 90)
@@ -38,10 +38,10 @@ namespace FleetManagement.Controllers
             await _context.VehicleLocations.AddAsync(location);
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = "Location data saved successfully" });
+            return Ok(new { Message = "Location of the vehicle saved successfully" });
         }
 
-        // GET /api/vehicles/locations - For returning vehicle locations in JSON format (API endpoint)
+        
         [HttpGet("locations")]
         public IActionResult GetLatestLocations()
         {

@@ -7,23 +7,12 @@ namespace FleetManagement.Controllers
     [Route("vehicles")]
     public class VehiclesController : Controller
     {
-        private readonly FleetDbContext _context;
-
-        public VehiclesController(FleetDbContext context)
-        {
-            _context = context;
-        }
-
-        // GET /vehicles/locations - For rendering a view with vehicle locations (View)
+        // VIEW
         [HttpGet("locations")]
-        public IActionResult LatestLocationsView()
+        public IActionResult LatestLocations()
         {
-            var latestLocations = _context.VehicleLocations
-                .GroupBy(v => v.VehicleId)
-                .Select(g => g.OrderByDescending(v => v.Timestamp).FirstOrDefault())
-                .ToList();
 
-            return View("LatestLocations", latestLocations);  // This renders a view
+            return View();  
         }
     }
 

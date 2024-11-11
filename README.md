@@ -1,17 +1,17 @@
 Fleet Management Web Application
 
-This project is a web application built using ASP.NET Core WEB API AND MVC and Entity Framework Core for fleet management. It tracks vehicle geolocations and presents them on a dashboard. 
+This project is a web application built using ASP.NET Core WEB API and Entity Framework Core for fleet management. It tracks vehicle geolocations and presents them on a dashboard. 
 The application includes both an API and a web interface for rendering and saving vehicle location data.
 Features:
 
     Track vehicle geolocations: Display vehicle positions on an interactive map.
     Web Interface: View the latest vehicle locations in a table format and map.
     API Endpoints: Save and retrieve vehicle location data via the API.
-    Unit Testing: Test the application’s core functionality.
+    Unit Testing: xUnit.
 
 Technologies
 
-    ASP.NET Core WEB API AND MVC
+    ASP.NET Core WEB API
     Entity Framework Core (SQL Server)
     Leaflet.js (for interactive maps)
     DataTables (for tabular data display)
@@ -46,7 +46,6 @@ dotnet restore
     Open appsettings.json and make sure your DefaultConnection points to a valid SQL Server database.
 
 
-
 Example:
 
 "ConnectionStrings": {
@@ -78,15 +77,17 @@ Testing the API with Postman
         Body (raw JSON):
 
 {
-  "vehicleId": "vehicle123",
+  "vehicleId": "V123",
   "latitude": 34.0522,
   "longitude": -118.2437
 }
 
+Note: Timestamp will be date time now since vehicles location change time to time
+
 Response:
 
     {
-      "Message": "Location data saved successfully"
+      "Message": "Location of the vehicle saved successfully"
     }
 
 GET /api/vehicles/locations:
@@ -118,7 +119,7 @@ GET /api/vehicles/locations:
 
 Additional:
     
-    on package manager console install NuGet\Install-Package Microsoft.EntityFrameworkCore.InMemory -Version 8.0.10
+    To run test, package manager console install NuGet\Install-Package Microsoft.EntityFrameworkCore.InMemory -Version 8.0.10
 
 7. const map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: 0, lng: 0 },
@@ -127,5 +128,7 @@ Additional:
 
 9. Filter vehicle search on Data table search input by Vehicle ID and the specific vehicle location will be focused or only show on the map, this exclude other vehicle ID
    on the table and map.
+
+10. Every 30 seconds all vehicle locations are updated on the dashboard. If filters are applied, you need to re apply them.
 
 8. Preloader: The page shows a preloader (loading spinner) until the content is ready to be displayed.

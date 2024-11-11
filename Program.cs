@@ -42,7 +42,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 // Configure the HTTP request pipeline.
-app.UseCors("AllowAll"); 
+app.UseCors("AllowAll");
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
