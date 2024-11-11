@@ -92,7 +92,7 @@ Response:
 
 GET /api/vehicles/locations:
 
-    URL: http://localhost:5086/api/vehicles/locations
+    URL: http://localhost:5086/api/vehicles/location
     Method: GET
     Response:
 
