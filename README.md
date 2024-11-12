@@ -129,6 +129,6 @@ Additional:
 9. Filter vehicle search on Data table search input by Vehicle ID and the specific vehicle location will be focused or only show on the map, this exclude other vehicle ID
    on the table and map.
 
-10. Every 30 seconds all vehicle locations are updated on the dashboard. If filters are applied, you need to re apply them.
+10. Every 30 seconds all vehicle locations are updated on the dashboard. If filters were applied, an alert will pop about you need to re-apply filters again.
 
 8. Preloader: The page shows a preloader (loading spinner) until the content is ready to be displayed.
