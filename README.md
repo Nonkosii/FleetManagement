@@ -52,7 +52,7 @@ Example:
     "DefaultConnection": "Server=your-server-name;Database=Fleet_Management;Trusted_Connection=True;TrustServerCertificate=True;"
 }
 
-4. Run SQL Script attached to this project(SSMS)
+4. Run SQL Script attached to this project(SSMS) alternative you can restore database backup named Fleet_Management.BAK found in this project's root folder
 
 Run the Application:
 
@@ -63,6 +63,7 @@ Run the application using:
     The web app will be accessible at:
         HTTP: http://localhost:5086
         HTTPS: https://localhost:7211
+
 
 5. API Endpoints
 
@@ -105,13 +106,39 @@ GET /api/vehicles/locations:
           }
         ]
 
-6. Unit Testing
+6. Unit/DAL tests as follows:
 
-    Run Unit Tests:
+    Install Dependencies
 
-    The project uses xUnit for unit testing. To run the tests, use the following:
+    Run the following commands in the terminal within the test project directory to install dependencies:
 
-    Run the tests via Visual Studio:
+    dotnet add package xunit
+    dotnet add package Moq
+    dotnet add package Microsoft.EntityFrameworkCore.InMemory
+
+    Test Cases
+
+    The following test cases are included in FleetManagement.Tests folder under VehiclesApiControllerTests:
+
+        PostLocation_ValidData_ReturnsOkResult
+            Tests that valid vehicle location data is saved successfully and returns an OkObjectResult with a success message.
+
+        PostLocation_InvalidData_ReturnsBadRequest
+            Tests that a request with an empty VehicleId returns a BadRequestObjectResult with an error message.
+
+        PostLocation_InvalidLatitude_ReturnsBadRequest
+            Tests that a request with an invalid latitude value returns a BadRequestObjectResult with an error message.
+
+        GetLatestLocations_ReturnsOkResult
+            Tests that the API correctly retrieves the latest location for each vehicle, returning an OkObjectResult with the latest location data.
+
+    Running the Tests
+
+    To run the tests, open a terminal in the test project's root directory and execute:
+
+    dotnet test 
+       Or 
+    run the tests via Visual Studio:
 
     Open the Test Explorer in Visual Studio.
 
@@ -119,7 +146,7 @@ GET /api/vehicles/locations:
 
 Additional:
     
-    To run test, package manager console install NuGet\Install-Package Microsoft.EntityFrameworkCore.InMemory -Version 8.0.10
+    InMemory package can also be install from console with the command: NuGet\Install-Package Microsoft.EntityFrameworkCore.InMemory -Version 8.0.10
 
 7. const map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: 0, lng: 0 },

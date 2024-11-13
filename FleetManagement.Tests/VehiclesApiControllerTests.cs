@@ -115,8 +115,8 @@ namespace FleetManagement.Tests
           
             var okResult = Assert.IsType<OkObjectResult>(result);
             var locations = Assert.IsAssignableFrom<System.Collections.Generic.List<VehicleLocation>>(okResult.Value);
-            Assert.Single(locations);  // Should only return the latest location for ABC123
-            Assert.Equal("ABC123", locations[0].VehicleId);
+            Assert.Single(locations);  // Should only return the latest location
+            Assert.Equal("V123", locations[0].VehicleId);
         }
     }
 }
